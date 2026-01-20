@@ -410,3 +410,234 @@ class ExpoModule : Module() {
     }
   }
 }
+
+object CommonConstants {
+    // Call option keys
+    const val CallOptionsKeyIceServers = "iceServers"
+    const val IceServerKeyServerUrl = "url"
+    const val IceServerKeyUsername = "username"
+    const val IceServerKeyPassword = "password"
+    const val CallOptionsKeyIceTransportPolicy = "iceTransportPolicy"
+    const val IceTransportPolicyValueAll = "all"
+    const val IceTransportPolicyValueRelay = "relay"
+    const val CallOptionsKeyPreferredAudioCodecs = "preferredAudioCodecs"
+
+    // Audio codec keys/values
+    const val AudioCodecKeyType = "type"
+    const val AudioCodecTypeValuePCMU = "pcmu"
+    const val AudioCodecTypeValueOpus = "opus"
+    const val AudioCodecOpusKeyMaxAverageBitrate = "maxAverageBitrate"
+
+    // Audio device keys
+    const val AudioDeviceKeyEarpiece = "earpiece"
+    const val AudioDeviceKeySpeaker = "speaker"
+    const val AudioDeviceKeyBluetooth = "bluetooth"
+    const val AudioDeviceKeyAudioDevices = "audioDevices"
+    const val AudioDeviceKeyName = "name"
+    const val AudioDeviceKeySelectedDevice = "selectedDevice"
+    const val AudioDeviceKeyType = "type"
+    const val AudioDeviceKeyUuid = "uuid"
+
+    // Call events
+    const val CallEventConnected = "connected"
+    const val CallEventDisconnected = "disconnected"
+    const val CallEventReconnected = "reconnected"
+    const val CallEventReconnecting = "reconnecting"
+    const val CallEventRinging = "ringing"
+    const val CallEventCurrentWarnings = "currentWarnings"
+    const val CallEventPreviousWarnings = "previousWarnings"
+    const val CallEventConnectFailure = "connectFailure"
+    const val CallEventQualityWarningsChanged = "qualityWarningsChanged"
+
+    // Call message events
+    const val CallEventMessageFailure = "messageFailure"
+    const val CallEventMessageReceived = "messageReceived"
+    const val CallEventMessageSent = "messageSent"
+
+    // Scopes
+    const val ScopeCall = "call"
+    const val ScopeCallInvite = "call-invite"
+    const val ScopeVoice = "voice"
+    const val ScopeCallMessage = "call-message"
+
+    // Voice event keys
+    const val VoiceEventType = "type"
+    const val VoiceEventError = "error"
+    const val VoiceEventSid = "sid"
+    const val VoiceEventAudioDevicesUpdated = "audioDevicesUpdated"
+    const val VoiceEventTypeValueIncomingCallInvite = "incoming-call-invite"
+
+    // Voice error keys
+    const val VoiceErrorKeyError = "error"
+    const val VoiceErrorKeyCode = "code"
+    const val VoiceErrorKeyMessage = "message"
+
+    // Call invite event keys
+    const val CallInviteEventKeyCallSid = "callSid"
+    const val CallInviteEventKeyType = "type"
+    const val CallInviteEventTypeValueAccepted = "accepted"
+    const val CallInviteEventTypeValueCancelled = "cancelled"
+    const val CallInviteEventTypeValueNotificationTapped = "notificationTapped"
+    const val CallInviteEventTypeValueRejected = "rejected"
+
+    // Call info keys
+    const val CallInfoFrom = "from"
+    const val CallInfoInitialConnectedTimestamp = "initialConnectedTimestamp"
+    const val CallInfoSid = "sid"
+    const val CallInfoTo = "to"
+    const val CallInfoUuid = "uuid"
+    const val CallInfoState = "state"
+    const val CallInfoIsMuted = "isMuted"
+    const val CallInfoIsOnHold = "isOnHold"
+
+    // Call states
+    const val CallStateConnected = "connected"
+    const val CallStateConnecting = "connecting"
+    const val CallStateDisconnected = "disconnected"
+    const val CallStateReconnecting = "reconnecting"
+    const val CallStateRinging = "ringing"
+
+    // Call invite info keys
+    const val CallInviteInfoCallSid = "callSid"
+    const val CallInviteInfoCustomParameters = "customParameters"
+    const val CallInviteInfoFrom = "from"
+    const val CallInviteInfoTo = "to"
+    const val CallInviteInfoUuid = "uuid"
+
+    // Cancelled call invite info keys
+    const val CancelledCallInviteInfoCallSid = "callSid"
+    const val CancelledCallInviteInfoFrom = "from"
+    const val CancelledCallInviteInfoTo = "to"
+
+    // Call message keys
+    const val CallMessageContent = "content"
+    const val CallMessageContentType = "contentType"
+    const val CallMessageMessageType = "messageType"
+    const val JSEventKeyCallMessageInfo = "callMessageInfo"
+
+    // Error codes
+    const val ErrorCodeInvalidArgumentError = "invalid-argument-error"
+    const val ErrorCodeInvalidStateError = "invalid-state-error"
+
+    // SDK info
+    const val ReactNativeVoiceSDK = "twilio-voice-react-native-sdk"
+    const val ReactNativeVoiceSDKVer = "2.0.0-dev"
+
+    // Call feedback scores
+    const val CallFeedbackScoreNotReported = "not-reported"
+    const val CallFeedbackScoreOne = "one"
+    const val CallFeedbackScoreTwo = "two"
+    const val CallFeedbackScoreThree = "three"
+    const val CallFeedbackScoreFour = "four"
+    const val CallFeedbackScoreFive = "five"
+
+    // Call feedback issues
+    const val CallFeedbackIssueAudioLatency = "audio-latency"
+    const val CallFeedbackIssueChoppyAudio = "choppy-audio"
+    const val CallFeedbackIssueEcho = "echo"
+    const val CallFeedbackIssueDroppedCall = "dropped-call"
+
+    // ICE candidate pair stats keys
+    const val AvailableIncomingBitrate = "availableIncomingBitrate"
+    const val AvailableOutgoingBitrate = "availableOutgoingBitrate"
+    const val BytesReceived = "bytesReceived"
+    const val BytesSent = "bytesSent"
+    const val ConsentRequestsReceived = "consentRequestsReceived"
+    const val ConsentRequestsSent = "consentRequestsSent"
+    const val ConsentResponsesReceived = "consentResponsesReceived"
+    const val ConsentResponsesSent = "consentResponsesSent"
+    const val CurrentRoundTripTime = "currentRoundTripTime"
+    const val LocalCandidateId = "localCandidateId"
+    const val LocalCandidateIp = "localCandidateIp"
+    const val Nominated = "nominated"
+    const val Priority = "priority"
+    const val Readable = "readable"
+    const val RelayProtocol = "relayProtocol"
+    const val RemoteCandidateId = "remoteCandidateId"
+    const val RemoteCandidateIp = "remoteCandidateIp"
+    const val RequestsReceived = "requestsReceived"
+    const val RequestsSent = "requestsSent"
+    const val ResponsesReceived = "responsesReceived"
+    const val ResponsesSent = "responsesSent"
+    const val RetransmissionsReceived = "retransmissionsReceived"
+    const val RetransmissionsSent = "retransmissionsSent"
+    const val State = "state"
+    const val TotalRoundTripTime = "totalRoundTripTime"
+    const val TransportId = "transportId"
+    const val Writeable = "writeable"
+
+    // ICE candidate stats keys
+    const val CandidateType = "candidateType"
+    const val Deleted = "deleted"
+    const val Ip = "ip"
+    const val IsRemote = "isRemote"
+    const val Port = "port"
+    const val Protocol = "protocol"
+    const val Url = "url"
+
+    // ICE candidate pair states
+    const val StateFailed = "failed"
+    const val StateFrozen = "frozen"
+    const val StateInProgress = "in-progress"
+    const val StateSucceeded = "succeeded"
+    const val StateWaiting = "waiting"
+
+    // More call feedback issues
+    const val CallFeedbackIssueNoisyCall = "noisy-call"
+    const val CallFeedbackIssueNotReported = "not-reported"
+    const val CallFeedbackIssueOneWayAudio = "one-way-audio"
+
+    // Preflight test states
+    const val PreflightTestStateCompleted = "completed"
+    const val PreflightTestStateConnected = "connected"
+    const val PreflightTestStateConnecting = "connecting"
+    const val PreflightTestStateFailed = "failed"
+
+    // Promise keys
+    const val PromiseKeyStatus = "status"
+    const val PromiseStatusValueResolved = "resolved"
+    const val PromiseKeyValue = "value"
+    const val PromiseStatusValueRejectedWithCode = "rejected-with-code"
+    const val PromiseKeyErrorCode = "code"
+    const val PromiseKeyErrorMessage = "message"
+    const val PromiseStatusValueRejectedWithName = "rejected-with-name"
+    const val PromiseKeyErrorName = "name"
+
+    // Preflight test event keys
+    const val PreflightTestEventTypeValueConnected = "connected"
+    const val PreflightTestEventKeyUuid = "uuid"
+    const val PreflightTestEventKeyType = "type"
+    const val PreflightTestEventTypeValueCompleted = "completed"
+    const val PreflightTestCompletedEventKeyReport = "report"
+    const val PreflightTestEventTypeValueFailed = "failed"
+    const val PreflightTestFailedEventKeyError = "error"
+    const val PreflightTestEventTypeValueQualityWarning = "quality-warning"
+    const val PreflightTestQualityWarningEventKeyCurrentWarnings = "currentWarnings"
+    const val PreflightTestQualityWarningEventKeyPreviousWarnings = "previousWarnings"
+    const val PreflightTestEventTypeValueSample = "sample"
+    const val PreflightTestSampleEventKeySample = "sample"
+    const val ScopePreflightTest = "preflight-test"
+
+    // Voice event types
+    const val VoiceEventRegistered = "registered"
+    const val VoiceEventUnregistered = "unregistered"
+
+    // Stats keys
+    const val PeerConnectionId = "peerConnectionId"
+    const val LocalAudioTrackStats = "localAudioTrackStats"
+    const val RemoteAudioTrackStats = "remoteAudioTrackStats"
+    const val IceCandidatePairStats = "iceCandidatePairStats"
+    const val IceCandidateStats = "iceCandidateStats"
+    const val Codec = "codec"
+    const val PacketsLost = "packetsLost"
+    const val Ssrc = "ssrc"
+    const val Timestamp = "timestamp"
+    const val TrackId = "trackId"
+    const val PacketsSent = "packetsSent"
+    const val RoundTripTime = "roundTripTime"
+    const val AudioLevel = "audioLevel"
+    const val Jitter = "jitter"
+    const val PacketsReceived = "packetsReceived"
+    const val Mos = "mos"
+    const val ActiveCandidatePair = "activeCandidatePair"
+}

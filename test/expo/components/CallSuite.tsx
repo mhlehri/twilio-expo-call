@@ -14,12 +14,19 @@ import Grid from './Grid';
 
 import { generateAccessToken } from '../constants/tokenUtility';
 
-let token = '';
-if (!token.length) {
-  token = generateAccessToken();
-}
-
 export function CallSuite() {
+  const [token, setToken] = React.useState('');
+
+  React.useEffect(() => {
+    const initializeToken = async () => {
+      if (!token.length) {
+        const generatedToken = await generateAccessToken();
+        setToken(generatedToken);
+      }
+    };
+    initializeToken();
+  }, []);
+
   const {
     registered,
     sdkVersion,
@@ -65,7 +72,6 @@ export function CallSuite() {
     ),
     [callInfo]
   );
-
 
   const callInviteComponent = React.useMemo(
     () => (

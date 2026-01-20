@@ -6,14 +6,18 @@ import { PreflightTestSuite } from './PreflightTestSuite';
 const defaultSuite = 'none';
 
 export function App() {
-  const [selectedSuite, setSelectedSuite] =
-    React.useState<'call' | 'preflightTest' | 'none'>(defaultSuite);
+  const [selectedSuite, setSelectedSuite] = React.useState<
+    'call' | 'preflightTest' | 'none'
+  >(defaultSuite);
 
   const suiteSelector = React.useMemo(() => {
     return (
       <SafeAreaView>
         <Button onPress={() => setSelectedSuite('call')} title="CALL SUITE" />
-        <Button onPress={() => setSelectedSuite('preflightTest')} title="PREFLIGHT TEST SUITE" />
+        <Button
+          onPress={() => setSelectedSuite('preflightTest')}
+          title="PREFLIGHT TEST SUITE"
+        />
       </SafeAreaView>
     );
   }, []);

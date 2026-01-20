@@ -14,9 +14,12 @@ import Grid from './Grid';
 import { generatePreflightAccessToken } from '../constants/tokenUtility';
 
 let token = '';
-if (!token.length) {
-  token = generatePreflightAccessToken();
-}
+
+(async () => {
+  if (!token.length) {
+    token = await generatePreflightAccessToken();
+  }
+})();
 
 export const PreflightTestSuite = () => {
   const {
@@ -35,25 +38,61 @@ export const PreflightTestSuite = () => {
 
   const [eventLogFormat, setEventLogFormat] = React.useState(true);
 
-  const preflightTestButtons = React.useMemo(() => (
-    <Grid horizontalGapSize={5} verticalGapSize={5} gridComponents={[
-      [<Button onPress={preflightTestHandler} title="Start Preflight" />],
-      [<Button onPress={preflightTestMethods.stop} title="Stop Preflight" />],
-      [<Button onPress={invalidTokenPreflightTestHandler} title="Invalid Preflight" />],
-      [
-        <Button onPress={preflightTestMethods.getStartTime} title="getStartTime" />,
-        <Button onPress={preflightTestMethods.getEndTime} title="getEndTime" />,
-      ],
-      [
-        <Button onPress={preflightTestMethods.getCallSid} title="getCallSid" />,
-        <Button onPress={preflightTestMethods.getState} title="getState" />,
-      ],
-      [
-        <Button onPress={preflightTestMethods.getLatestSample} title="getLatestSample" />,
-        <Button onPress={preflightTestMethods.getReport} title="getReport" />,
-      ],
-    ]} />
-    ), [preflightTestHandler, invalidTokenPreflightTestHandler, preflightTestMethods]);
+  const preflightTestButtons = React.useMemo(
+    () => (
+      <Grid
+        horizontalGapSize={5}
+        verticalGapSize={5}
+        gridComponents={[
+          [<Button onPress={preflightTestHandler} title="Start Preflight" />],
+          [
+            <Button
+              onPress={preflightTestMethods.stop}
+              title="Stop Preflight"
+            />,
+          ],
+          [
+            <Button
+              onPress={invalidTokenPreflightTestHandler}
+              title="Invalid Preflight"
+            />,
+          ],
+          [
+            <Button
+              onPress={preflightTestMethods.getStartTime}
+              title="getStartTime"
+            />,
+            <Button
+              onPress={preflightTestMethods.getEndTime}
+              title="getEndTime"
+            />,
+          ],
+          [
+            <Button
+              onPress={preflightTestMethods.getCallSid}
+              title="getCallSid"
+            />,
+            <Button onPress={preflightTestMethods.getState} title="getState" />,
+          ],
+          [
+            <Button
+              onPress={preflightTestMethods.getLatestSample}
+              title="getLatestSample"
+            />,
+            <Button
+              onPress={preflightTestMethods.getReport}
+              title="getReport"
+            />,
+          ],
+        ]}
+      />
+    ),
+    [
+      preflightTestHandler,
+      invalidTokenPreflightTestHandler,
+      preflightTestMethods,
+    ]
+  );
 
   return (
     <SafeAreaView style={styles.expand}>
@@ -80,12 +119,7 @@ export const PreflightTestSuite = () => {
         </View>
       </View>
       <View style={styles.padded}>
-        <Grid
-          verticalGapSize={5}
-          gridComponents={[
-            [preflightTestButtons],
-          ]}
-        />
+        <Grid verticalGapSize={5} gridComponents={[[preflightTestButtons]]} />
       </View>
     </SafeAreaView>
   );

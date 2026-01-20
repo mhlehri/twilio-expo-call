@@ -1122,6 +1122,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.28.6":
+  version: 7.28.6
+  resolution: "@babel/runtime@npm:7.28.6"
+  checksum: 10c0/358cf2429992ac1c466df1a21c1601d595c46930a13c1d4662fde908d44ee78ec3c183aaff513ecb01ef8c55c3624afe0309eeeb34715672dbfadb7feedb2c0d
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.25.0, @babel/template@npm:^7.27.1, @babel/template@npm:^7.27.2, @babel/template@npm:^7.3.3":
   version: 7.27.2
   resolution: "@babel/template@npm:7.27.2"
@@ -2387,9 +2394,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@twilio/voice-react-native-sdk@portal:../../::locator=twiliovoiceexpoexample%40workspace%3A.":
-  version: 0.0.0-use.local
-  resolution: "@twilio/voice-react-native-sdk@portal:../../::locator=twiliovoiceexpoexample%40workspace%3A."
+"@twilio/voice-react-native-sdk@npm:2.0.0-preview.1":
+  version: 2.0.0-preview.1
+  resolution: "@twilio/voice-react-native-sdk@npm:2.0.0-preview.1"
   dependencies:
     "@twilio/voice-errors": "npm:1.8.0"
     eventemitter3: "npm:^4.0.7"
@@ -2400,8 +2407,9 @@ __metadata:
   peerDependenciesMeta:
     expo:
       optional: true
+  checksum: 10c0/3d63dc0e14d67a2b10dae2ec8e1320052d4043bf32ccd53b8525dc475292eed04466d8aa95cd7562b70037da042aa213b0d23493ce1f44524a133d905be52b6a
   languageName: node
-  linkType: soft
+  linkType: hard
 
 "@types/babel__core@npm:^7.1.14":
   version: 7.20.5
@@ -9416,10 +9424,11 @@ __metadata:
   resolution: "twiliovoiceexpoexample@workspace:."
   dependencies:
     "@babel/core": "npm:^7.25.2"
+    "@babel/runtime": "npm:^7.28.6"
     "@expo/vector-icons": "npm:~14.0.4"
     "@react-navigation/bottom-tabs": "npm:^7.2.0"
     "@react-navigation/native": "npm:^7.0.14"
-    "@twilio/voice-react-native-sdk": "portal:../../"
+    "@twilio/voice-react-native-sdk": "npm:2.0.0-preview.1"
     "@types/jest": "npm:^29.5.12"
     "@types/react": "npm:~18.3.12"
     "@types/react-test-renderer": "npm:^18.3.0"
