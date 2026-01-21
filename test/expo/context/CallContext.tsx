@@ -1,5 +1,5 @@
-import CallKeepService from "@/src/services/CallKeepService";
-import TwilioVoiceService from "@/src/services/TwilioVoiceService";
+import CallKeepService from '@/src/services/CallKeepService';
+import TwilioVoiceService from '@/src/services/TwilioVoiceService';
 import React, {
   createContext,
   ReactNode,
@@ -7,20 +7,20 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from "react";
-import { Platform } from "react-native";
-import RNCallKeep from "react-native-callkeep";
-import { useSelector } from "react-redux";
-import { RootState } from "../redux/store";
+} from 'react';
+import { Platform } from 'react-native';
+import RNCallKeep from 'react-native-callkeep';
+import { useSelector } from 'react-redux';
+import { RootState } from '../redux/store';
 
-export type CallType = "video" | "voice";
+export type CallType = 'video' | 'voice';
 export type CallStatus =
-  | "idle"
-  | "calling"
-  | "ringing"
-  | "connected"
-  | "ended"
-  | "failed";
+  | 'idle'
+  | 'calling'
+  | 'ringing'
+  | 'connected'
+  | 'ended'
+  | 'failed';
 
 export interface CallParticipant {
   id: string;
@@ -65,7 +65,7 @@ interface CallContextValue {
   toggleVideo: () => void;
   simulateIncomingCall: (
     participant: CallParticipant,
-    callType: CallType,
+    callType: CallType
   ) => void;
   onCallEnded?: (record: CallHistoryRecord) => void;
   setOnCallEnded: (callback: (record: CallHistoryRecord) => void) => void;
@@ -80,7 +80,7 @@ const CallContext = createContext<CallContextValue | undefined>(undefined);
 const initialCallState: CallState = {
   callId: null,
   callType: null,
-  callStatus: "idle",
+  callStatus: 'idle',
   isIncoming: false,
   participant: null,
   callStartTime: null,
@@ -109,12 +109,12 @@ export function CallProvider({ children }: { children: ReactNode }) {
       // });
       await twilioService.initialize(
         token,
-        "+14702560094",
+        '+14702560094',
         4,
-        process.env.EXPO_PUBLIC_BASE_URL,
+        process.env.EXPO_PUBLIC_BASE_URL
       );
     },
-    [twilioService],
+    [twilioService]
   );
 
   console.log({ registered: twilioService.isRegistered });
@@ -125,18 +125,18 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
     // Create call history record if call was connected
     if (
-      currentState.callStatus === "connected" &&
+      currentState.callStatus === 'connected' &&
       currentState.participant &&
       currentState.callStartTime
     ) {
       const duration = Math.floor(
-        (endTime.getTime() - currentState.callStartTime.getTime()) / 1000,
+        (endTime.getTime() - currentState.callStartTime.getTime()) / 1000
       );
 
       const record: CallHistoryRecord = {
         id: currentState.callId || `call-${Date.now()}`,
         participant: currentState.participant,
-        callType: currentState.callType || "voice",
+        callType: currentState.callType || 'voice',
         isIncoming: currentState.isIncoming,
         startTime: currentState.callStartTime,
         endTime: endTime,
@@ -157,7 +157,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
     (callback: (record: CallHistoryRecord) => void) => {
       setOnCallEndedCallback(() => callback);
     },
-    [],
+    []
   );
 
   const resetCallState = useCallback(() => {
@@ -166,33 +166,33 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
   const fetchVoiceToken = useCallback(async () => {
     try {
-      console.log("[CallContext] Fetching new voice token...");
+      console.log('[CallContext] Fetching new voice token...');
       // TODO: Get real phone number from user profile or config
-      const identity = "+14702560094";
+      const identity = '+14702560094';
       const companyId = auth.companyId || 4; // Fallback to 4 or from auth
-      const platform = Platform.OS === "ios" ? "ios" : "android";
+      const platform = Platform.OS === 'ios' ? 'ios' : 'android';
 
       const response = await fetch(
-        "https://dev.autoworx.tech/api/twilio/token",
+        'https://dev.autoworx.tech/api/twilio/token',
         {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
           body: JSON.stringify({ identity, companyId, platform }),
-        },
+        }
       );
 
       const data = await response.json();
       if (data.token) {
-        console.log("[CallContext] New token fetched successfully");
+        console.log('[CallContext] New token fetched successfully');
         return data.token;
       } else {
-        console.error("[CallContext] Failed to get Twilio token", data);
+        console.error('[CallContext] Failed to get Twilio token', data);
         return null;
       }
     } catch (error) {
-      console.error("[CallContext] Error fetching voice token:", error);
+      console.error('[CallContext] Error fetching voice token:', error);
       return null;
     }
   }, [auth.companyId]);
@@ -208,38 +208,38 @@ export function CallProvider({ children }: { children: ReactNode }) {
           await twilioService.updateToken(newToken);
         } else {
           console.warn(
-            "[CallContext] Could not fetch fresh token, proceeding with existing session if any",
+            '[CallContext] Could not fetch fresh token, proceeding with existing session if any'
           );
         }
 
         // 1. Generate the UUID first
-        const callKeepUUID = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+        const callKeepUUID = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
           /[xy]/g,
           (c) => {
             const r = (Math.random() * 16) | 0;
-            return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
-          },
+            return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
+          }
         );
 
-        console.log("starting call by callkeep");
+        console.log('starting call by callkeep');
         // 2. IMPORTANT: Register with CallKit IMMEDIATELY.
         // This "holds" the audio session for your app.
         callKeepService.startCall(
           participant.phoneNumber,
           participant.name,
-          callKeepUUID,
+          callKeepUUID
         );
 
         console.log(
-          "[CallContext] Starting call with CallKeep UUID:",
-          callKeepUUID,
+          '[CallContext] Starting call with CallKeep UUID:',
+          callKeepUUID
         );
 
-        console.log("starting call by twilio");
+        console.log('starting call by twilio');
         // 3. NOW connect to Twilio
         const { call } = await twilioService.makeCall(
           participant.phoneNumber,
-          participant.name,
+          participant.name
         );
         console.log({ call });
 
@@ -247,7 +247,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
         setCallState({
           callId: callKeepUUID,
           callType,
-          callStatus: "calling",
+          callStatus: 'calling',
           isIncoming: false,
           participant,
           callStartTime: null,
@@ -261,21 +261,21 @@ export function CallProvider({ children }: { children: ReactNode }) {
         // (Do this once Twilio confirms the connection)
         RNCallKeep.reportConnectedOutgoingCallWithUUID(callKeepUUID);
       } catch (error: any) {
-        console.error("[CallContext] Failed to start call:", error);
+        console.error('[CallContext] Failed to start call:', error);
         // If it fails, make sure to clear the UI
         RNCallKeep.endAllCalls();
         setCallState((prev) => ({
           ...prev,
-          callStatus: "failed",
-          error: error?.message || "Connection failed",
+          callStatus: 'failed',
+          error: error?.message || 'Connection failed',
         }));
       }
     },
-    [twilioService, callKeepService],
+    [twilioService, callKeepService]
   );
   const answerCall = useCallback(async () => {
     try {
-      console.log("[CallContext] Answering call");
+      console.log('[CallContext] Answering call');
 
       const accepted = await twilioService.acceptCall();
 
@@ -287,19 +287,19 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
       setCallState((prev) => ({
         ...prev,
-        callStatus: "connected",
+        callStatus: 'connected',
         callStartTime: new Date(),
       }));
     } catch (error) {
-      console.error("[CallContext] Failed to answer call:", error);
+      console.error('[CallContext] Failed to answer call:', error);
     }
   }, [callKeepService, callState.callKeepUUID, twilioService]);
 
   const endCall = useCallback(async () => {
     try {
-      console.log("[CallContext] Ending call");
+      console.log('[CallContext] Ending call');
 
-      if (callState.isIncoming && callState.callStatus === "ringing") {
+      if (callState.isIncoming && callState.callStatus === 'ringing') {
         await twilioService.rejectCall();
       } else {
         await twilioService.disconnectCall();
@@ -311,7 +311,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
       handleCallDisconnected();
     } catch (error) {
-      console.error("[CallContext] Failed to end call:", error);
+      console.error('[CallContext] Failed to end call:', error);
       handleCallDisconnected();
     }
   }, [
@@ -336,7 +336,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
         isMuted: isMuted,
       }));
     } catch (error) {
-      console.error("[CallContext] Failed to toggle mute:", error);
+      console.error('[CallContext] Failed to toggle mute:', error);
     }
   }, [callKeepService, callState.callKeepUUID, twilioService]);
 
@@ -369,65 +369,65 @@ export function CallProvider({ children }: { children: ReactNode }) {
 
       callKeepService.displayIncomingCall(
         participant.phoneNumber || participant.id,
-        uuid,
+        uuid
       );
 
       setCallState({
         callId,
         callType,
-        callStatus: "ringing",
+        callStatus: 'ringing',
         isIncoming: true,
         participant,
         callStartTime: null,
         isMuted: false,
         isSpeakerOn: false,
-        isVideoEnabled: callType === "video",
+        isVideoEnabled: callType === 'video',
         callKeepUUID: uuid,
       });
     },
-    [callKeepService],
+    [callKeepService]
   );
 
   // Debug function to check if voice/audio is working
   const debugCallInfo = useCallback(() => {
-    console.log("========== CALL DEBUG INFO ==========");
+    console.log('========== CALL DEBUG INFO ==========');
     console.log(
-      "[Debug] Current Call State:",
-      JSON.stringify(callState, null, 2),
+      '[Debug] Current Call State:',
+      JSON.stringify(callState, null, 2)
     );
 
     const twilioDebug = twilioService.getCallDebugInfo();
     console.log(
-      "[Debug] Twilio Call Info:",
-      JSON.stringify(twilioDebug, null, 2),
+      '[Debug] Twilio Call Info:',
+      JSON.stringify(twilioDebug, null, 2)
     );
 
     if (twilioDebug.hasActiveCall) {
-      console.log("[Debug] ✅ Active call exists");
+      console.log('[Debug] ✅ Active call exists');
       console.log(
-        "[Debug] Muted:",
+        '[Debug] Muted:',
         twilioDebug.isMuted
-          ? "🔇 YES - VOICE NOT TRANSMITTING!"
-          : "🔊 NO - Voice should be transmitting",
+          ? '🔇 YES - VOICE NOT TRANSMITTING!'
+          : '🔊 NO - Voice should be transmitting'
       );
-      console.log("[Debug] Call SID:", twilioDebug.callSid);
-      console.log("[Debug] Call State:", twilioDebug.callState);
+      console.log('[Debug] Call SID:', twilioDebug.callSid);
+      console.log('[Debug] Call State:', twilioDebug.callState);
     } else {
-      console.log("[Debug] ❌ No active Twilio call");
+      console.log('[Debug] ❌ No active Twilio call');
     }
 
-    console.log("[Debug] CallKeep UUID:", callState.callKeepUUID);
-    console.log("[Debug] Call Status:", callState.callStatus);
-    console.log("[Debug] Is Muted (state):", callState.isMuted);
-    console.log("=====================================");
+    console.log('[Debug] CallKeep UUID:', callState.callKeepUUID);
+    console.log('[Debug] Call Status:', callState.callStatus);
+    console.log('[Debug] Is Muted (state):', callState.isMuted);
+    console.log('=====================================');
 
     return twilioDebug;
   }, [callState, twilioService]);
 
   const getUuid = () => {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (c) => {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       const r = (Math.random() * 16) | 0;
-      return (c === "x" ? r : (r & 0x3) | 0x8).toString(16);
+      return (c === 'x' ? r : (r & 0x3) | 0x8).toString(16);
     });
   };
 
@@ -435,58 +435,58 @@ export function CallProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     twilioService.setListeners({
       onCallStatusChanged: (status, call) => {
-        console.log("[CallContext] Twilio status changed:", status);
+        console.log('[CallContext] Twilio status changed:', status);
 
         // Auto debug when connected
-        if (status === "connected") {
-          console.log("========== CALL CONNECTED - AUTO DEBUG ==========");
+        if (status === 'connected') {
+          console.log('========== CALL CONNECTED - AUTO DEBUG ==========');
           const debugInfo = twilioService.getCallDebugInfo();
-          console.log("[Auto Debug] Call connected! Checking audio state...");
+          console.log('[Auto Debug] Call connected! Checking audio state...');
           console.log(
-            "[Auto Debug] Is Muted:",
-            debugInfo.isMuted ? "🔇 YES" : "🔊 NO",
+            '[Auto Debug] Is Muted:',
+            debugInfo.isMuted ? '🔇 YES' : '🔊 NO'
           );
-          console.log("[Auto Debug] Call SID:", debugInfo.callSid);
+          console.log('[Auto Debug] Call SID:', debugInfo.callSid);
           if (debugInfo.isMuted) {
             console.warn(
-              "[Auto Debug] ⚠️ WARNING: Call is MUTED! Other party cannot hear you!",
+              '[Auto Debug] ⚠️ WARNING: Call is MUTED! Other party cannot hear you!'
             );
           } else {
             console.log(
-              "[Auto Debug] ✅ Audio should be transmitting to other party",
+              '[Auto Debug] ✅ Audio should be transmitting to other party'
             );
           }
-          console.log("================================================");
+          console.log('================================================');
         }
 
-        let newStatus: CallStatus = "idle";
+        let newStatus: CallStatus = 'idle';
         switch (status) {
-          case "connecting":
-            newStatus = "calling";
+          case 'connecting':
+            newStatus = 'calling';
             break;
-          case "ringing":
-            newStatus = "ringing";
+          case 'ringing':
+            newStatus = 'ringing';
             break;
-          case "connected":
-            newStatus = "connected";
+          case 'connected':
+            newStatus = 'connected';
             break;
-          case "reconnecting":
-            newStatus = "connected";
+          case 'reconnecting':
+            newStatus = 'connected';
             break;
-          case "disconnected":
-            newStatus = "ended";
+          case 'disconnected':
+            newStatus = 'ended';
             break;
         }
 
         setCallState((prev) => {
-          if (status === "disconnected") {
+          if (status === 'disconnected') {
             if (prev.callKeepUUID) {
               callKeepService.endCall(prev.callKeepUUID);
             }
 
             // If we are already in failed state, don't reset!
             // This allows the UI to show the error message.
-            if (prev.callStatus === "failed") {
+            if (prev.callStatus === 'failed') {
               return prev;
             }
 
@@ -497,7 +497,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
             ...prev,
             callStatus: newStatus,
             callStartTime:
-              status === "connected" && !prev.callStartTime
+              status === 'connected' && !prev.callStartTime
                 ? new Date()
                 : prev.callStartTime,
           };
@@ -510,17 +510,17 @@ export function CallProvider({ children }: { children: ReactNode }) {
         // FIX: Generate a proper UUID for CallKeep
         const incomingCallUUID = getUuid();
 
-        console.log("[CallContext] Incoming call from:", from);
-        console.log("[CallContext] - Twilio SID:", callSid);
-        console.log("[CallContext] - Generated UUID:", incomingCallUUID);
+        console.log('[CallContext] Incoming call from:', from);
+        console.log('[CallContext] - Twilio SID:', callSid);
+        console.log('[CallContext] - Generated UUID:', incomingCallUUID);
 
         // Pass the VALID UUID to CallKeep
         RNCallKeep.displayIncomingCall(incomingCallUUID, from);
 
         setCallState({
           callId: callSid, // You can keep the SID as the internal callId if you prefer
-          callType: "voice",
-          callStatus: "ringing",
+          callType: 'voice',
+          callStatus: 'ringing',
           isIncoming: true,
           participant: { id: from, name: from, phoneNumber: from },
           callStartTime: null,
@@ -532,16 +532,16 @@ export function CallProvider({ children }: { children: ReactNode }) {
       },
       onCallInviteCancelled: (callInvite) => {
         const uuid = callInvite.getCallSid();
-        console.log("[CallContext] Call invite cancelled");
+        console.log('[CallContext] Call invite cancelled');
         callKeepService.endCall(uuid);
         setCallState(initialCallState);
       },
       onError: (error: any) => {
-        console.error("[CallContext] Twilio Error:", error);
+        console.error('[CallContext] Twilio Error:', error);
         setCallState((prev) => ({
           ...prev,
-          callStatus: "failed",
-          error: error?.message || "An error occurred",
+          callStatus: 'failed',
+          error: error?.message || 'An error occurred',
         }));
       },
     });
@@ -550,7 +550,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
   // Setup CallKeep event listeners
   useEffect(() => {
     const handleAnswerCallEvent = ({ callUUID }: { callUUID: string }) => {
-      console.log("Native UI: Answer call", callUUID);
+      console.log('Native UI: Answer call', callUUID);
       answerCall();
     };
 
@@ -566,21 +566,21 @@ export function CallProvider({ children }: { children: ReactNode }) {
       muted: boolean;
       callUUID: string;
     }) => {
-      console.log("Native UI: Set muted", muted, callUUID);
+      console.log('Native UI: Set muted', muted, callUUID);
       toggleMute();
     };
 
-    RNCallKeep.addEventListener("answerCall", handleAnswerCallEvent);
+    RNCallKeep.addEventListener('answerCall', handleAnswerCallEvent);
     // RNCallKeep.addEventListener("endCall", handleEndCallEvent);
     RNCallKeep.addEventListener(
-      "didPerformSetMutedCallAction",
-      handleSetMutedEvent,
+      'didPerformSetMutedCallAction',
+      handleSetMutedEvent
     );
 
     return () => {
-      RNCallKeep.removeEventListener("answerCall");
-      RNCallKeep.removeEventListener("endCall");
-      RNCallKeep.removeEventListener("didPerformSetMutedCallAction");
+      RNCallKeep.removeEventListener('answerCall');
+      RNCallKeep.removeEventListener('endCall');
+      RNCallKeep.removeEventListener('didPerformSetMutedCallAction');
     };
   }, [answerCall, endCall, toggleMute]);
 
@@ -607,7 +607,7 @@ export function CallProvider({ children }: { children: ReactNode }) {
 export function useCall() {
   const context = useContext(CallContext);
   if (context === undefined) {
-    throw new Error("useCall must be used within a CallProvider");
+    throw new Error('useCall must be used within a CallProvider');
   }
   return context;
 }
